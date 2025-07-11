@@ -47,134 +47,246 @@ MacOS
 <img width="5760" height="3332" alt="image" src="https://github.com/user-attachments/assets/a6bfd937-a84b-48cf-b5e2-4d9b639ce103" />
 <img width="1000" height="930" alt="image" src="https://github.com/user-attachments/assets/fdc60bb5-082f-427d-b8de-f544ccb83692" />
 
-Multi‑Monitor Layout
+## Update Mechanism
 
+Updates are delivered through Squirrel (Windows, macOS) and a custom shell script (Linux).  
+Channels:
 
-First-Run Guide
-Launch the application and sign in with an existing TradingView account.
+* **stable** – default, updated monthly  
+* **beta** – feature preview, updated weekly  
+* **nightly** – bleeding edge build from the `main` branch, built every 24 h
 
-The initial layout syncs automatically from the last browser session.
+Switch channels in **Settings → General** or set `"updateChannel"` in `config.json`.
 
-Alerts created in the browser are transferred to the local background service; duplicates are suppressed.
+---
 
-Verify data-feed permissions via File → Account & Billing.
+## First‑Run Guide
 
-Window Management
-Detach chart: Right-click title bar → Move to new window or press Ctrl/Cmd+Shift+D.
+1. Launch the application and sign in with your TradingView or social account.  
+2. Existing browser layouts, watchlists and Pine scripts are imported.  
+3. A background service is registered to deliver alerts even when UI windows are closed.  
+4. Verify exchange entitlements in **File → Account & Billing**; missing permissions are displayed in the status bar.
 
-Pin window: Click the thumb-tack icon or press Ctrl/Cmd+Shift+P to keep a window on top.
+---
 
-Save workspace: Layout and window geometry are persisted on exit; disable via Settings → General → Save window positions.
+## User Guide
 
-Global shortcuts:
+* **Detach windows:** Right‑click a chart tab → *Move to new window* or press `Ctrl/Cmd+Shift+D`.  
+* **Pin windows:** Click the push‑pin icon or press `Ctrl/Cmd+Shift+P`.  
+* **Reset layout:** `Ctrl/Cmd+Alt+R` closes all windows and reopens the default layout.  
+* **Search command palette:** `Ctrl/Cmd+Shift+P` opens the universal command palette.  
+* **Keyboard shortcuts:** Printable PDF at `docs/keyboard-shortcuts.pdf`.
 
-Ctrl/Cmd+Shift+N – new chart window
+---
 
-`Ctrl/Cmd+`` – cycle windows
+## Configuration & Persistence
 
-Ctrl/Cmd+Shift+Alt+F – force GPU black-list re-evaluation (helpful after driver updates)
+Configuration is stored per‑user:
 
-Configuration
-Configuration files are stored per-user:
+| OS | Path |
+|----|------|
+| Windows | `%APPDATA%\TradingView Desktop\config.json` |
+| macOS | `~/Library/Application Support/TradingView Desktop/config.json` |
+| Linux | `~/.config/TradingView Desktop/config.json` |
 
-OS	Path
-Windows	%APPDATA%\TradingView Desktop\config.json
-macOS	~/Library/Application Support/TradingView Desktop/config.json
-Linux	~/.config/TradingView Desktop/config.json
+Example:
 
-Key parameters:
+```jsonc
 {
-  "theme": "oled-dark",            // light, dark, oled-dark or custom theme id
-  "updateChannel": "stable",       // stable, beta, nightly
-  "proxy": "http://proxy:8080",    // optional HTTP/SOCKS proxy
+  "theme": "oled-dark",
+  "updateChannel": "beta",
+  "proxy": "http://proxy.local:8080",
+  "telemetryEnabled": false,
   "allowWindowRestore": true,
-  "telemetryEnabled": false
+  "portableMode": false
 }
-After editing this file, restart the application to apply changes.
+```
 
-Command-Line Interface
+---
 
+## Command‑Line Interface
+
+```
 tradingview-desktop [options] [url]
 
 Options:
-  --safe-mode        Disable all third-party plugins.
-  --gpu-reset        Clear GPU data and relaunch.
-  --portable <dir>   Store configuration and cache inside <dir> (no writes to user profile).
-  --lang <code>      Force UI language (e.g. en, de, ja, ru).
-Example:
+  --safe-mode            Disable all third‑party plugins.
+  --portable <dir>       Store config/cache inside <dir>.
+  --gpu-reset            Clear GPU shader cache and relaunch.
+  --lang <code>          Force UI language.
+  --ozone-platform=x11   Override Wayland autodetection (Linux).
+  --trace-startup        Enable Chromium startup tracing.
+```
 
-bash
+---
 
-tradingview-desktop --portable ~/tv-portable --lang ru https://www.tradingview.com/chart/ABC123/
-Plugin Development
-The Plugin API is an opt-in JavaScript/TypeScript bridge built on the Chrome Extension messaging model.
+## Environment Variables
 
-Enable Developer Mode in Settings → Plugins.
+| Variable | Purpose |
+|----------|---------|
+| `HTTPS_PROXY` | Proxy URL used by update checker and data feeds. |
+| `TV_DESKTOP_DISABLE_AUTOUPDATE` | Set to `1` to disable automatic updates. |
+| `TV_DESKTOP_PORTABLE` | Overrides `--portable`; path to portable directory. |
+| `ELECTRON_ENABLE_LOGGING` | Enables Chromium debug logging. |
 
-Clone the example:
+---
 
-bash
+## Data Caching & Offline Mode
 
-git clone https://github.com/tradingview/desktop-plugin-starter
-cd desktop-plugin-starter && pnpm install && pnpm run build
-Load the unpacked directory via Plugins → Load unpacked.
+* Layouts, symbols metadata, quotes and candlesticks up to 90 d old are stored in IndexedDB.  
+* Disk usage is capped at 2 GB; oldest data is pruned automatically.  
+* Alerts generated while offline are queued and dispatched once connectivity is re‑established.  
+* To reset cache, launch with `--safe-mode --gpu-reset` and clear **Settings → Storage → Clear data**.
 
-Access the tvDesktop global for IPC, storage, and chart-level hooks.
+---
 
-Documentation is published at docs/tradingview-desktop-plugin-api.pdf.
+## Plugin Development
 
-Security Model
-All remote content is delivered over HTTPS with HSTS.
+1. Enable **Developer Mode** in **Settings → Plugins**.  
+2. Each plugin is a directory containing:
 
-Renderer processes have contextIsolation, sandbox, disableEval and a Content-Security-Policy restricting external origins.
+```
+my-plugin/
+  manifest.json
+  background.js
+  panel.html
+  icon.png
+```
 
-Auto-updates are code-signed and verified before installation.
+3. `manifest.json` example:
 
-Plugins are limited to the domains declared in their manifest and run in isolated contexts.
+```json
+{
+  "name": "Volume‑Profile Panel",
+  "version": "1.0.0",
+  "description": "Interactive volume profile overlay",
+  "author": "ExampleCorp",
+  "permissions": ["storage", "ipc"],
+  "content_scripts": [{
+    "matches": ["app://chart/*"],
+    "js": ["background.js"]
+  }]
+}
+```
 
-Crash dumps exclude personal data and require explicit consent before upload.
+4. Use the global `tvDesktop` API for IPC:
 
-For vulnerability disclosure, contact security@tradingview.com. The GPG key fingerprint is listed in SECURITY.md.
+```js
+tvDesktop.send("overlay:add", { symbol: "AAPL", timeframe: "1D" });
+```
 
-Troubleshooting
-Symptom	Resolution
-Blank window / GL init failed	Start with --gpu-reset; update graphics drivers; disable overclock utilities.
-Alerts not firing while app is closed	Ensure Allow app to run in background is enabled in Settings → System (Windows) or Login Items (macOS).
-High CPU usage	Check if experimental indicators/scripts are misbehaving; run in Safe Mode to confirm.
-Auto-update fails behind corporate proxy	Set HTTPS_PROXY environment variable or edit config.json proxy field.
-Wayland session crashes on AMD GPUs	Launch with --ozone-platform=x11 until upstream fix lands.
+Comprehensive API reference lives in `docs/plugin-api.md`.
 
-Detailed logs: Help → Open logs directory. Attach renderer-*.log when filing issues.
+---
 
-Contributing
-Pull requests, bug reports and feature proposals are welcome.
+## Security Model
 
-Fork the repository and create a feature branch.
+* Renderer processes are launched with `--disable-node-leakage`, `--sandbox` and a restrictive Content Security Policy.  
+* Plugins are limited to declared domains and cannot read local files.  
+* Automatic updates are validated against embedded SHA‑512 hashes and signed certificates.  
+* Crash reports are encrypted in transit and require opt‑in consent.
 
-Install dependencies: pnpm install.
+Please report vulnerabilities to `security@tradingview.com` (PGP key in `SECURITY.md`).
 
-Run the full quality gate:
+---
 
-bash
+## Release Channels
 
-pnpm run lint
-pnpm run test
-pnpm run check-types
-Squash commits before opening a PR.
+| Channel | Frequency | Audience |
+|---------|-----------|----------|
+| stable  | Monthly   | General users |
+| beta    | Weekly    | Early adopters |
+| nightly | Daily     | Contributors and testers |
 
-Follow the style guide in docs/CONTRIBUTING.md.
+Switch channels via **Settings → General → Update channel**.
 
-Code of Conduct adheres to the Contributor Covenant v2.1.
+---
 
-License
-TradingView Desktop is licensed under the Apache License, Version 2.0.
-See LICENSE for the full text.
+## Building From Source
 
-Support
-Documentation: https://tradingview.github.io/desktop
+Prerequisites:
 
-User forum: https://community.tradingview.com
+* Node.js ≥ 20
+* pnpm ≥ 8
+* Python 3 and C++ build tools (required by native modules)
+* Git ≥ 2.30
 
-Help Center: https://support.tradingview.com
+Steps:
 
-Commercial support plans are available upon request via sales@tradingview.com.
+```bash
+git clone https://github.com/tradingview/desktop.git
+cd desktop
+pnpm install
+pnpm run build
+pnpm run start
+```
+
+To create distributables:
+
+```bash
+pnpm run pack:win
+pnpm run pack:mac
+pnpm run pack:linux
+```
+
+Artifacts are placed in `dist/`.
+
+---
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---------|------------|
+| Blank UI on launch | Run with `--gpu-reset`; update GPU drivers; disable overlay software. |
+| Alerts not triggering | Ensure background service is not blocked by firewall; verify **Run in background** is enabled. |
+| High CPU usage | Check for runaway Pine scripts; disable experimental indicators; collect profile with `Help → Performance monitor`. |
+| Wayland crash loop | Launch with `--ozone-platform=x11` or update Mesa drivers > 24.0. |
+
+Logs reside in:
+
+* Windows: `%LOCALAPPDATA%\TradingView Desktop\logs`  
+* macOS: `~/Library/Logs/TradingView Desktop`  
+* Linux: `~/.local/share/TradingView Desktop/logs`
+
+---
+
+## Frequently Asked Questions
+
+**Q:** Does TradingView Desktop support brokerage trading?  
+**A:** Yes. All brokers supported in the browser are available. Launch the **Trading Panel** and connect your broker account.
+
+**Q:** How do I import custom fonts?  
+**A:** Place `.ttf` or `.otf` files in `assets/fonts` and reference them in a custom JSON theme under `fontFamily`.
+
+**Q:** Can I run multiple accounts simultaneously?  
+**A:** Use the `--portable` flag with separate directories or create OS‑level user profiles.
+
+**Q:** Where are my saved images stored?  
+**A:** In `Saved Images` tab on your TradingView profile; local copies are under `cache/images`.
+
+---
+
+## Contributing
+
+We welcome pull requests, issues and feature proposals.
+
+1. Fork, branch, commit, open PR.  
+2. Pass the full quality gate: `pnpm run lint && pnpm run test`.  
+3. Sign commits with a valid GPG key.  
+4. Respect the Code of Conduct (Contributor Covenant 2.1).
+
+---
+
+## License
+
+TradingView Desktop is distributed under the Apache License, Version 2.0.  
+See the `LICENSE` file for the full text.
+
+---
+
+## Support
+
+* Documentation – <https://tradingview.github.io/desktop>  
+* User forum – <https://community.tradingview.com>  
+* Help Center – <https://support.tradingview.com>  
+* Commercial support – <sales@tradingview.com>
