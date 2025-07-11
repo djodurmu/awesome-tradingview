@@ -6,31 +6,92 @@ Official desktop client for TradingView — the world‑leading charting & tradi
 Official cross-platform client for running TradingView outside the browser.  
 Built with Electron and TypeScript, it delivers the full TradingView experience together with native-style window management, persistent background services and an extensible plugin architecture.
 
-## Features
+TradingView Desktop is the official cross‑platform client for running TradingView without a browser.  
+It combines the full power of TradingView charts and social features with desktop‑grade window management, background services and an extensible plugin architecture built on Electron and TypeScript.
 
-Category
+---
 
-Highlights
+## Table of Contents
 
-Multi‑monitor
+1. [Key Capabilities](#key-capabilities)  
+2. [Architecture Overview](#architecture-overview)  
+3. [System Requirements](#system-requirements)  
+4. [Installation](#installation)  
+5. [Update Mechanism](#update-mechanism)  
+6. [First‑Run Guide](#first-run-guide)  
+7. [User Guide](#user-guide)  
+8. [Configuration & Persistence](#configuration--persistence)  
+9. [Command‑Line Interface](#command-line-interface)  
+10. [Environment Variables](#environment-variables)  
+11. [Data Caching & Offline Mode](#data-caching--offline-mode)  
+12. [Plugin Development](#plugin-development)  
+13. [Security Model](#security-model)  
+14. [Release Channels](#release-channels)  
+15. [Building From Source](#building-from-source)  
+16. [Troubleshooting](#troubleshooting)  
+17. [Frequently Asked Questions](#frequently-asked-questions)  
+18. [Contributing](#contributing)  
+19. [License](#license)  
+20. [Support](#support)
 
-Unlimited detachable windows, one‑click layout restore
+---
 
-Performance
+## Key Capabilities
 
-Hardware‑accelerated rendering, reduced RAM footprint
+| Capability | Detail |
+|------------|--------|
+| Multi‑window | Detach any chart or panel into a standalone window. Window state, geometry and monitor mapping are restored on restart. |
+| Background alerts | Indicator and price alerts, webhook listeners and scheduled strategies continue to execute even when no UI window is open. |
+| Hardware acceleration | GPU compositing and WebGL are enabled by default; automatic fallback to software rendering on incompatible hardware. |
+| Theme engine | Light, dark and OLED‑optimized themes plus importable JSON themes. |
+| Offline‑ready | Charting core, layouts, watchlists and up to 90 days of historical data are cached for disconnected operation. |
+| Plugin API | Secure bridge exposing chart surfaces, data feeds, settings storage and inter‑process messages for TypeScript extensions. |
+| Auto‑update | Differential updates signed with SHA‑512 checksums and timestamped OS certificates. |
+| Diagnostics | Integrated performance monitor, log viewer, crash‑report uploader and GPU information dialog. |
 
-Deep Linking
+---
 
-tradingview:// links open directly in the app
+## Architecture Overview
 
-Pro Workflows
+```
++------------------------------+
+|        Main Process          | Electron, TS
++------------------------------+
+       |  IPC (contextBridge)
++------------------------------+
+|  Renderer Process (UI)       | React
+|  - Chart container           |
+|  - Pine editor               |
+|  - Plugin host (sandbox)     |
++------------------------------+
+       |  WebSocket / HTTP(S)
++------------------------------+
+|  Core Services               |
+|  - Data Feed proxy           |
+|  - Background alerts engine  |
+|  - Storage & caching layer   |
++------------------------------+
+       |  IndexedDB / File I/O
++------------------------------+
+|  Persistent Storage          |
++------------------------------+
+```
 
-Chart syncing across tabs, global cross‑hair, full shortcut support
+*All third‑party plugins run inside an isolated preload and cannot access Node.js APIs directly.*
 
-Auto‑Updates
+---
 
-Silent updates delivered on every launch
+## System Requirements
+
+| Platform | Architecture | Minimum OS | Notes |
+|----------|--------------|------------|-------|
+| Windows  | x64, ARM64   | Windows 10 1809 | Windows 7/8.1 are not supported. |
+| macOS    | Apple Silicon, Intel | macOS 11 Big Sur | Universal binary (arm64 + x64); notarised. |
+| Linux    | x64, ARM64   | glibc ≥ 2.28, X11 or Wayland | Tested on Ubuntu, Debian, Fedora, Arch. |
+
+A discrete or integrated GPU supporting OpenGL 2.1 or newer and at least 4 GB RAM are recommended.
+
+---
 
 ##  Download & Install
 Windows
